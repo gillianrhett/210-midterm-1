@@ -26,35 +26,38 @@ private: // these class members cannot be accessed outside the class
     Node* head; // create a pointer to a Node, named head; this will be the head pointer for the beginning of the list
     Node* tail; // create a pointer to a Node, named tail; this will be the tail pointer for the end of the list
 
-public:
-    DoublyLinkedList() { head = nullptr; tail = nullptr; }
+public: // the following members of the DLL class are accessible outside of the class
+    DoublyLinkedList() { head = nullptr; tail = nullptr; } // default constructor; will be called when no arguments are provided
 
-    void insert_after(int value, int position) {
-        if (position < 0) {
-            cout << "Position must be >= 0." << endl;
-            return;
-        }
+    void insert_after(int value, int position) { // public member function to insert a new item into the list with the value and position from the arguments provided by caller
+        if (position < 0) { // they have to enter a position at least 0 because that's the first item
+            cout << "Position must be >= 0." << endl; // show an error message
+            return; // just end the function because the argument was invalid
+        } // end of input validation function
 
-        Node* newNode = new Node(value);
-        if (!head) {
-            head = tail = newNode;
-            return;
-        }
+        Node* newNode = new Node(value); // dynanmically allocate memory for a Node with the value given by the argument
+        if (!head) { // if head == nullptr, that means the list is empty
+            head = tail = newNode; // this is the first and only item, so both head and tail should point to it
+            return; // end the function
+        } // end of checking for empty list
 
-        Node* temp = head;
-        for (int i = 0; i < position && temp; ++i)
-            temp = temp->next;
+        Node* temp = head; // create a temp pointer and start it with the same address and head
+        for (int i = 0; i < position && temp; ++i) // traverse the list until we either reach the given position or the end of the list
+            temp = temp->next; // move to the next node
+        // this loop takes us to the position in the list where we need to insert the new node
 
-        if (!temp) {
-            cout << "Position exceeds list size. Node not inserted.\n";
-            delete newNode;
-            return;
-        }
+        if (!temp) { // this is true if the for loop kept going to the tail pointer and we didn't yet get to the specified position
+            // i.e. they put in a position >= the size of the list
+            cout << "Position exceeds list size. Node not inserted.\n"; // display error message
+            delete newNode; // deallocate the memory because we aren't going to insert this node
+            return; // end the function
+        } // end of checking for position being a too-high number
 
-        newNode->next = temp->next;
-        newNode->prev = temp;
-        if (temp->next)
-            temp->next->prev = newNode;
+        // if we've reached this line, we are at the correct position to insert the new node in the list
+        newNode->next = temp->next; // assign the new node's next pointer to point to the node after the node we're inserting after
+        newNode->prev = temp; // assign the new node's prev pointer to point to the node we're inserting after
+        if (temp->next) // if the item we're inserting after is NOT the last item in the list...
+            temp->next->prev = newNode; // ... then make the node we're inserting after point to the new node
         else
             tail = newNode;
         temp->next = newNode;

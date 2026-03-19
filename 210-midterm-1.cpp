@@ -1,23 +1,30 @@
-#include <iostream>
-using namespace std;
+#include <iostream> // include the iostream library so we can use cout
+using namespace std; // put all the items from std into scope 
+// so we don't have to use the scope resolution operator like std::cout
 
+// create constants for the minimum and maximum TODO find these
 const int MIN_NR = 10, MAX_NR = 99, MIN_LS = 5, MAX_LS = 20;
 
-class DoublyLinkedList {
-private:
-    struct Node {
-        int data;
-        Node* prev;
-        Node* next;
-        Node(int val, Node* p = nullptr, Node* n = nullptr) {
-            data = val; 
-            prev = p;
-            next = n;
-        }
-    };
+class DoublyLinkedList { // create a class named DoublyLinkedList
+private: // these class members cannot be accessed outside the class
+    struct Node { // create a struct named Node; this will be each node in the list
+        int data; // create a member variable of node named data that stores an integer
+        // this int is the data value stored in the list; the other struct members are pointers
+        // that create the structure of the list
 
-    Node* head;
-    Node* tail;
+        Node* prev; // create a pointer to a Node, named prev, which will store a pointer to the previous list item
+        Node* next; // create a pointer to a Node, named next, which will store a pointer to the next list item
+        
+        // Node constructor with parameters to set the data and the previous and next pointers
+        Node(int val, Node* p = nullptr, Node* n = nullptr) { // default pointer values are nullptr, which need to be the values when we start the list with just one node
+            data = val; // assign the value of the first argument to the data member variable of the Node
+            prev = p; // assign the value of the 2nd argument if there is one to the Node's prev pointer
+            next = n; // assign the value of the 3rd argment if there is one to the Node's next pointer
+        } // end of the constructor
+    }; // end of the class definition
+
+    Node* head; // create a pointer to a Node, named head; this will be the head pointer for the beginning of the list
+    Node* tail; // create a pointer to a Node, named tail; this will be the tail pointer for the end of the list
 
 public:
     DoublyLinkedList() { head = nullptr; tail = nullptr; }

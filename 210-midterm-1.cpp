@@ -27,6 +27,7 @@ private: // these class members cannot be accessed outside the class
     Node* tail; // create a pointer to a Node, named tail; this will be the tail pointer for the end of the list
 
 public: // the following members of the DLL class are accessible outside of the class
+// these are member functions we can call to work with a DLL object
     DoublyLinkedList() { head = nullptr; tail = nullptr; } // default constructor; will be called when no arguments are provided
 
     void insert_after(int value, int position) { // public member function to insert a new item into the list with the value and position from the arguments provided by caller
@@ -41,7 +42,7 @@ public: // the following members of the DLL class are accessible outside of the 
             return; // end the function
         } // end of checking for empty list
 
-        Node* temp = head; // create a temp pointer and start it with the same address and head
+        Node* temp = head; // create a temporary pointer and start it pointing to the first node in the list
         for (int i = 0; i < position && temp; ++i) // traverse the list until we either reach the given position or the end of the list
             temp = temp->next; // move to the next node
         // this loop takes us to the position in the list where we need to insert the new node
@@ -54,32 +55,34 @@ public: // the following members of the DLL class are accessible outside of the 
         } // end of checking for position being a too-high number
 
         // if we've reached this line, we are at the correct position to insert the new node in the list
-        newNode->next = temp->next; // assign the new node's next pointer to point to the node after the node we're inserting after
-        newNode->prev = temp; // assign the new node's prev pointer to point to the node we're inserting after
-        if (temp->next) // if the item we're inserting after is NOT the last item in the list...
-            temp->next->prev = newNode; // ... then make the node we're inserting after point to the new node
-        else
-            tail = newNode;
-        temp->next = newNode;
+        newNode->next = temp->next; // assign the new node's next pointer to point forward to the node after the node we're inserting after
+        newNode->prev = temp; // assign the new node's prev pointer to point backward to the node we're inserting after
+        if (temp->next) // if the node we're inserting after is NOT the last item in the list...
+            temp->next->prev = newNode; // ...the node after the one we're inserting after will have its prev pointer point backward to the new node
+        else // else the node we're inserting after IS the last one, therefore the new node becomes the new last one
+            tail = newNode; // make tail point to the new last node
+        temp->next = newNode; // make the node we're inserting after point forward to the new node
     }
 
-    void delete_val(int value) {
-        if (!head) return;
+    void delete_val(int value) { // function to delete the first node found with the given value
+        if (!head) return; // if the list is empty, just end the function
 
-        Node* temp = head;
+        Node* temp = head; // create a temporary pointer and start it pointing to the first node in the list
         
-        while (temp && temp->data != value)
-            temp = temp->next;
+        while (temp && temp->data != value) 
+        // traverse the list until either we reach the first instance of the given value or the end of the list
+            temp = temp->next; // the above conditions haven't yet been met so move on to the next node
 
-        if (!temp) return; 
+        if (!temp) return; // if we reached the end of the list without finding the given value, end the function
 
-        if (temp->prev)
-            temp->prev->next = temp->next;
-        else
-            head = temp->next; 
+        if (temp->prev) // if the item with the given value is not the first (its prev pointer isn't nullptr)...
+            temp->prev->next = temp->next; // ... then make the item before it point forward to the item after it
+        else // else the item with the given value is the first node in the list...
+            head = temp->next; // ... then make head point to the second node in the list
+        // it's OK to change these because the temp pointer is saving the address of the node we're removing
 
-        if (temp->next)
-            temp->next->prev = temp->prev;
+        if (temp->next) // if the node we're removing is not at the end of the list...
+            temp->next->prev = temp->prev; // 
         else
             tail = temp->prev; 
 

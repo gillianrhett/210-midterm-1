@@ -146,72 +146,74 @@ public: // the following members of the DLL class are accessible outside of the 
     void push_front(int v) { // function for prepending a node to the beginning
         // doesn't return a value, takes arg of the value the new node will store
         Node* newNode = new Node(v); // allocate memory for a new node storing the given value
-        if (!head)
-            head = tail = newNode;
-        else {
-            newNode->next = head;
-            head->prev = newNode;
-            head = newNode;
+        if (!head) // if the list is empty
+            head = tail = newNode; // the new node is the only one in the list so head and tail should both point to it
+        else { // else the list isn't empty
+            newNode->next = head; // make new node point forward to what was the first node
+            head->prev = newNode; // make what was the first node point backward to the new node
+            head = newNode; // make head point to the new node, making it the first item
         }
     }
     
-    void pop_front() {
+    void pop_front() { // function to delete the first node
+    // returns nothing and needs to args
+        if (!head) { // if the list is empty
+            cout << "List is empty." << endl;  // let user know there's nothing to delete
+            return; // end function
+        } // done checking for empty list
 
-        if (!head) {
-            cout << "List is empty." << endl;
-            return;
+        Node * temp = head; // temp pointer points to first node
+
+        if (head->next) { // if this isn't the only node
+            head = head->next; // make head point forward to the 2nd node
+            head->prev = nullptr; // make head point backward to nothing
         }
-
-        Node * temp = head;
-
-        if (head->next) {
-            head = head->next;
-            head->prev = nullptr;
-        }
-        else
-            head = tail = nullptr;
-        delete temp;
+        else // else there's only one node
+            head = tail = nullptr; // make head and tail both point to nullptr because deleting this node makes the list empty
+        delete temp; // delete this node
     }
 
-    void pop_back() {
-        if (!tail) {
-            cout << "List is empty." << endl;
-            return;
-        }
-        Node * temp = tail;
+    void pop_back() { // function to remove the last node
+        // returns nothing and needs to args
+        if (!tail) { // if the list isn't empty
+            cout << "List is empty." << endl; // let user know there's nothing to delete
+            return; // end function
+        } // done checking for empty list
+        Node * temp = tail; // temp ptr to last node
 
-        if (tail->prev) {
-            tail = tail->prev;
-            tail->next = nullptr;
+        if (tail->prev) { // if this isn't the only node
+            tail = tail->prev; // make tail point to 2nd-to-last node
+            tail->next = nullptr; // make what was 2nd to last node point forward to nullptr; this is now the last node
         }
-        else
-            head = tail = nullptr;
-        delete temp;
+        else // else there's only one node
+            head = tail = nullptr; // empty the list
+        delete temp; // delete what was the last node
     }
 
-    ~DoublyLinkedList() {
-        while (head) {
-            Node* temp = head;
-            head = head->next;
-            delete temp;
+    ~DoublyLinkedList() { // destructor
+        while (head) { // while the list isn't empty
+            Node* temp = head; // temp pointer to current first item
+            head = head->next; // make head point to next item
+            delete temp; // delete what was the first item
+        } // done deleting all the nodes
+    } // end of destructor
+    void print() { // function to display the contents of the list
+        // no return val, no args
+        Node* current = head; // temp pointer to first node
+        if (!current) { // if the list is empty
+            cout << "List is empty." << endl; // tell user list is empty
+            return; // end function
         }
-    }
-    void print() {
-        Node* current = head;
-        if (!current) {
-            cout << "List is empty." << endl;
-            return;
-        }
-        while (current) {
-            cout << current->data << " ";
-            current = current->next;
-        }
-        cout << endl;
-    }
+        while (current) { // before we reach the end of the list
+            cout << current->data << " "; // display the current node's data
+            current = current->next; // move on to the next node
+        } // done displaying all nodes' data
+        cout << endl; // new line
+    } // end of print()
 
-    void print_reverse() {
-        Node* current = tail;
-        if (!current) { 
+    void print_reverse() { // function to display list's values in reverse order
+        Node* current = tail; // temp pointer to last item
+        if (!current) {  //
             cout << "List is empty." << endl;
             return;
         }
@@ -221,18 +223,26 @@ public: // the following members of the DLL class are accessible outside of the 
         }
         cout << endl;
     }
+
+    void every_other_element(){
+        Node* current = head; // temp pointer to first node
+        if (!current) { // if the list is empty
+            cout << "List is empty." << endl; // tell user list is empty
+            return; // end function
+        }
+        int i = 0;
+        while (current) { // before we reach the end of the list
+            if (i % 2 == 0)
+                cout << current->data << " "; // display the current node's data
+            i++;
+            current = current->next; // move on to the next node
+        } // done displaying all nodes' data
+        cout << endl; // new line
+    }
 };
 
 int main() {
     cout << MIN_NR + MIN_LS + MAX_NR + MAX_LS;  // dummy statement to avoid compiler warning
-
-    // TESTING
-    DoublyLinkedList list;
-    list.print();
-    list.insert_after(1, 0);
-    list.insert_after(2, 0);
-    list.insert_after(3, 0);
-    list.print();
-    
+   
     return 0;
 }

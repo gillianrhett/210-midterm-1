@@ -68,6 +68,7 @@ public: // the following members of the DLL class are accessible outside of the 
     }
 
     void delete_val(int value) { // function to delete the first node found with the given value
+        // does not return a value
         if (!head) return; // if the list is empty, just end the function
 
         Node* temp = head; // create a temporary pointer and start it pointing to the first node in the list
@@ -92,56 +93,59 @@ public: // the following members of the DLL class are accessible outside of the 
         delete temp; // now that we've changed the pointers, deallocate the memory for the node we're removing
     } // end of the function, so we don't need to assign nullptr to temp because it's going out of scope and getting deleted anyway
 
-    void delete_pos(int pos) { //
-        if (!head) {
-            cout << "List is empty." << endl;
-            return;
-        }
+    void delete_pos(int pos) { // delete the node at the given position (NOT index; the first item is position 1)
+        // does not return a value
+        if (!head) { // if the head pointer is nullptr, the list is empty
+            cout << "List is empty." << endl; // message lets user know there is nothing to delete
+            return; // end the function
+        } // end of checking for empty list
     
-        if (pos == 1) {
-            pop_front();
-            return;
-        }
+        if (pos == 1) { // if we want to delete the first item
+            pop_front(); // call the function that deletes the first item
+            return; // end this function
+        } // end of checking whether it's the first item
     
-        Node* temp = head;
+        Node* temp = head; // make a temp pointer and point it at the first node
     
-        for (int i = 1; i < pos; i++){
-            if (!temp) {
-                cout << "Position doesn't exist." << endl;
-                return;
-            }
-            else
-                temp = temp->next;
-        }
-        if (!temp) {
-            cout << "Position doesn't exist." << endl;
-            return;
-        }
+        for (int i = 1; i < pos; i++){ // traverse the list
+            if (!temp) { // if we got to the end
+                cout << "Position doesn't exist." << endl; // tell user we reached the end and didn't find the position they wanted
+                return; // end the function
+            } // done checking whether we are at the end of the list
+            else // else we are not at the end of the list
+                temp = temp->next; // advance to the next node
+        } // end of loop to traverse the list
+        if (!temp) { // if we reached the end of the list on the last loop iteration
+            cout << "Position doesn't exist." << endl; // tell user we reached the end etc. as above
+            return; // end the function
+        } // done checking for whether the position argument is valid
     
-        if (!temp->next) {
-            pop_back();
-            return;
-        }
+        if (!temp->next) { // if the item to delete is at the end
+            pop_back(); // function that deletes the last node
+            return; // end this function
+        } // done checking whether the item to remove is the last one
     
-        Node* tempPrev = temp->prev;
-        tempPrev->next = temp->next;
-        temp->next->prev = tempPrev;
-        delete temp;
-    }
+        Node* tempPrev = temp->prev; // make a temp pointer for saving the prev pointer to the node before the one we're removing
+        tempPrev->next = temp->next; // make the node before the one we're removing point forward to the node after the one we're removing
+        temp->next->prev = tempPrev; // make the node after the one we're removing point backward to the node before the one we're removing
+        delete temp; // now that all the pointers have bypassed the node we're removing, deallocate its memory
+    } // end of delete function
 
-    void push_back(int v) {
-        Node* newNode = new Node(v);
-        if (!tail)
-            head = tail = newNode;
-        else {
-            tail->next = newNode;
-            newNode->prev = tail;
-            tail = newNode;
-        }
-    }
+    void push_back(int v) { // function to append a node to the end
+        // doesn't return a value, takes argument of the value the new node should store
+        Node* newNode = new Node(v); // allocate memory for a node with the given value
+        if (!tail) // if the list is empty...
+            head = tail = newNode; // ...head and tail both point to this new node, which is the only list item
+        else { // the list isn't empty
+            tail->next = newNode; // make the last item point forward to the new node
+            newNode->prev = tail; // make the new node point backward to what was the last item
+            tail = newNode; // make the tail pointer point to the new node, which is now the last item
+        } // end of checking whether list is empty
+    } // end of push_back function
     
-    void push_front(int v) {
-        Node* newNode = new Node(v);
+    void push_front(int v) { // function for prepending a node to the beginning
+        // doesn't return a value, takes arg of the value the new node will store
+        Node* newNode = new Node(v); // allocate memory for a new node storing the given value
         if (!head)
             head = tail = newNode;
         else {

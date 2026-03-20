@@ -2,7 +2,7 @@
 using namespace std; // put all the items from std into scope 
 // so we don't have to use the scope resolution operator like std::cout
 
-// create constants for the minimum and maximum TODO find these
+// create constants for minimums and maximums for random vals for random values and random list size
 const int MIN_NR = 10, MAX_NR = 99, MIN_LS = 5, MAX_LS = 20;
 
 class DoublyLinkedList { // create a class named DoublyLinkedList
@@ -213,36 +213,44 @@ public: // the following members of the DLL class are accessible outside of the 
 
     void print_reverse() { // function to display list's values in reverse order
         Node* current = tail; // temp pointer to last item
-        if (!current) {  //
-            cout << "List is empty." << endl;
-            return;
-        }
-        while (current) {
-            cout << current->data << " ";
-            current = current->prev;
-        }
-        cout << endl;
+        if (!current) {  // list is empty
+            cout << "List is empty." << endl; // tell user there's nothing to display
+            return; // end function
+        } // done checking for empty list
+        while (current) { // not yet at end of list
+            cout << current->data << " "; // display this node's data
+            current = current->prev; // move on to next node
+        } // done displaying items
+        cout << endl; // new line
     }
 
-    void every_other_element(){
+    void every_other_element() { // function to display every other element starting from first
+    // no return value or args
         Node* current = head; // temp pointer to first node
         if (!current) { // if the list is empty
             cout << "List is empty." << endl; // tell user list is empty
             return; // end function
         }
-        int i = 0;
+        int i = 0; // to keep track of which list item we're at
         while (current) { // before we reach the end of the list
-            if (i % 2 == 0)
+            if (i % 2 == 0) // only display every other item (index is even)
                 cout << current->data << " "; // display the current node's data
-            i++;
+            i++; // increment the index
             current = current->next; // move on to the next node
         } // done displaying all nodes' data
         cout << endl; // new line
     }
-};
+}; // end of DLL class definition
 
 int main() {
-    cout << MIN_NR + MIN_LS + MAX_NR + MAX_LS;  // dummy statement to avoid compiler warning
-   
+    //cout << MIN_NR + MIN_LS + MAX_NR + MAX_LS;  // dummy statement to avoid compiler warning
+    
+    // demo of every_other_item
+    DoublyLinkedList list;
+    int size = rand() % (MAX_LS - MIN_LS) + MIN_LS;
+    for (int i = 0; i < size; ++i)
+        list.push_back(rand() % (MAX_NR - MIN_NR) + MIN_NR);
+    list.every_other_element();
+
     return 0;
 }

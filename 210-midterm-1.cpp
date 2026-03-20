@@ -30,7 +30,9 @@ public: // the following members of the DLL class are accessible outside of the 
 // these are member functions we can call to work with a DLL object
     DoublyLinkedList() { head = nullptr; tail = nullptr; } // default constructor; will be called when no arguments are provided
 
-    void insert_after(int value, int position) { // public member function to insert a new item into the list with the value and position from the arguments provided by caller
+    void insert_after(int value, int position) { // public member function to insert a new item into the list
+        // does not return a value, needs 2 arguments that are the data value to store and the index of the node we want to insert the new node AFTER
+        // which means if the list isn't empty, then this function can't add a node to the front
         if (position < 0) { // they have to enter a position at least 0 because that's the first item
             cout << "Position must be >= 0." << endl; // show an error message
             return; // just end the function because the argument was invalid
@@ -46,11 +48,12 @@ public: // the following members of the DLL class are accessible outside of the 
         for (int i = 0; i < position && temp; ++i) // traverse the list until we either reach the given position or the end of the list
             temp = temp->next; // move to the next node
         // this loop takes us to the position in the list where we need to insert the new node
+        // if position is 0 then i < position is never true and temp still points to the first item, so the new node will become the second item
 
-        if (!temp) { // this is true if the for loop kept going to the tail pointer and we didn't yet get to the specified position
-            // i.e. they put in a position >= the size of the list
+        if (!temp) { // this is true if the for loop kept going to the end of the list and we didn't yet get to the specified position
+            // i.e. they put in a position > the size of the list
             cout << "Position exceeds list size. Node not inserted.\n"; // display error message
-            delete newNode; // deallocate the memory because we aren't going to insert this node
+            delete newNode; // deallocate the memory because we aren't going to insert this node after all
             return; // end the function
         } // end of checking for position being a too-high number
 
@@ -82,14 +85,14 @@ public: // the following members of the DLL class are accessible outside of the 
         // it's OK to change these because the temp pointer is saving the address of the node we're removing
 
         if (temp->next) // if the node we're removing is not at the end of the list...
-            temp->next->prev = temp->prev; // 
-        else
-            tail = temp->prev; 
+            temp->next->prev = temp->prev; // ...then make the node before it point to the node after it
+        else // else the node we're removing IS at the end...
+            tail = temp->prev; // ...then make tail point to the second-to-last node
 
-        delete temp;
-    }
+        delete temp; // now that we've changed the pointers, deallocate the memory for the node we're removing
+    } // end of the function, so we don't need to assign nullptr to temp because it's going out of scope and getting deleted anyway
 
-    void delete_pos(int pos) {
+    void delete_pos(int pos) { //
         if (!head) {
             cout << "List is empty." << endl;
             return;
@@ -219,6 +222,13 @@ public: // the following members of the DLL class are accessible outside of the 
 int main() {
     cout << MIN_NR + MIN_LS + MAX_NR + MAX_LS;  // dummy statement to avoid compiler warning
 
+    // TESTING
+    DoublyLinkedList list;
+    list.print();
+    list.insert_after(1, 0);
+    list.insert_after(2, 0);
+    list.insert_after(3, 0);
+    list.print();
     
     return 0;
 }
